@@ -1,4 +1,5 @@
 using AppVersion.entities;
+using AppVersion.ViewModel;
 using System.Reflection;
 using System.Reflection.Metadata.Ecma335;
 
@@ -20,29 +21,14 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-var summaries = new[]
-{
-    "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-};
-
 app.MapGet("/appVersion", () =>
 {
-    List<string> list = new List<string>();
-
-    var aseembly = Assembly.GetEntryAssembly().GetName().Version.ToString();
-    list.Add(aseembly);
+    var assembly = Assembly.GetEntryAssembly().GetName().Version.ToString();
     var fileVersion = Assembly.GetEntryAssembly().GetCustomAttribute<AssemblyFileVersionAttribute>().Version.ToString();
-    list.Add(fileVersion);
     var version = Assembly.GetEntryAssembly().GetCustomAttribute<AssemblyInformationalVersionAttribute>().InformationalVersion.ToString();
-    list.Add(version);
 
-    return list;
+    return new AppVersionAssembly(assembly,fileVersion,version );
 })
 .WithName("GetVersion");
 
 app.Run();
-
-internal record WeatherForecast(DateTime Date, int TemperatureC, string? Summary)
-{
-    public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
-}

@@ -1,4 +1,5 @@
 using AppVersion.entities;
+using AppVersion.Routes;
 using AppVersion.ViewModel;
 using System.Reflection;
 using System.Reflection.Metadata.Ecma335;
@@ -21,14 +22,6 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-app.MapGet("/appVersion", () =>
-{
-    var assembly = Assembly.GetEntryAssembly().GetName().Version.ToString();
-    var fileVersion = Assembly.GetEntryAssembly().GetCustomAttribute<AssemblyFileVersionAttribute>().Version.ToString();
-    var version = Assembly.GetEntryAssembly().GetCustomAttribute<AssemblyInformationalVersionAttribute>().InformationalVersion.ToString();
-
-    return new AppVersionAssembly(assembly,fileVersion,version );
-})
-.WithName("GetVersion");
+app.MapVersions();
 
 app.Run();
